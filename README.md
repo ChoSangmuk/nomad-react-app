@@ -103,9 +103,104 @@ export default App;
 ```
 
 ## 2.1 Reusable Components with JSX + Props
+- Components return closed HTML Tag
+- Components can send data to (child) components using Props(full name.Property)
+- Declaration of use of props similar with HTML attribute 
+- To use props in child components, use {}
+```js
+import React from 'react';
+
+function Food(props) {
+  console.log(props);
+  return (
+    <h2>I Love {props.favorite}!</h2>
+  );
+}
+// or 
+function Food({ favorite }) {
+  return (
+    <h2>I Love {favorite}!</h2>
+  );
+}
+
+function App() {
+  return (
+    <div className="App">
+      <h1>Hello!</h1>
+      <Food favorite="kimchi" /> {/* Using Potato Component */}
+    </div>
+  );
+}
+
+export default App;
+```
+
 ## 2.2 Dynamic Component Generation
+- Using JavaScript Array function - [map](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/maps)
+```js
+function Food({ name, image }) {
+  return (
+    <div>
+      <h2>I Love {name}!</h2>
+      <img src={image}></img>
+    </div>
+  );
+}
+
+const foodList = ["Something..."];
+
+function App() {
+  return (
+    <div className="App">
+      {/* Using Map */}
+      {foodList.map(value => <Food name={value.name} image={value.image} />)}
+    </div>
+  );
+}
+```
+
 ## 2.3  map Recap
+- another way using map 
+```js
+function App() {
+  return (
+    <div className="App">
+      {/* Using Map */}
+      {foodList.map(value => <Food name={value.name} image={value.image} />)}
+    </div>
+  );
+}
+// or
+function renderFood(value) {
+  return <Food name={value.name} image={value.image} />;
+}
+function App() {
+  return (
+    <div className="App">
+      {/* Using Map */}
+      {foodList.map(renderFood)}
+    </div>
+  );
+}
+```
+- to solve Warning: Each child in a list should have a unique "key" prop. -> make props "key"
+```js
+foodList.map(value => <Food key={value.id} name={value.name} image={value.image} />)
+```
+
 ## 2.4 Protection with PropTypes
+- check props from parents component
+- npm install prop-types // shell
+- [PropTypes](https://ko.reactjs.org/docs/typechecking-with-proptypes.html)
+```js
+import PropTypes from 'prop-types';
+
+Food.propTypes = {
+  name: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  rating: PropTypes.number.isRequired,
+}
+```
 
 # 3 STATE
 ## 3.0 Class Components and State
