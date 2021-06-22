@@ -4,21 +4,15 @@
 
 # 0 INTRODUCTION
 ## 0.1 Requirements
-- node js
 ```sh
+# node js
 node -v
-```
-- npm 
-```sh
+# npm 
 npm -v
-```
-- npx
-```sh
+# npx
 npm install npx -g
 npx -v
-```
-- git 
-```sh
+# git 
 git --version
 ```
 
@@ -204,9 +198,89 @@ Food.propTypes = {
 
 # 3 STATE
 ## 3.0 Class Components and State
+- react automatically run render method in class component
+- why using Class component? state 
+- state is Object, and save changeable Data
+```js
+class App extends React.Component {
+  state = {
+    count: 0,
+  }
+
+  add = () => {
+    console.log("add");
+  }
+
+  minus = () => {
+    console.log("minus");
+  }
+
+  render() {
+    return <div>
+      <h1>The number is {this.state.count}</h1>
+      <button onClick={this.add} >add</button> {/* not this.add(), it is immediately run */}
+      <button onClick={this.minus} >minus</button>
+    </div>;
+  }
+}
+```
+
 ## 3.1 All you need to know about State
+- how can you change state? ->  Do not mutate state directly. Use setState().
+- if modify state directly, react dosen't refresh render function.
+- that mean's react want to refresh when state changed -> notify using setState().
+```js
+  add = () => {
+    this.setState(keyword => ({ count: keyword.count+1, }));
+  }
+
+  minus = () => {
+    this.setState(current => ({ count: current.count-1, }));
+  }
+```
+- About implicit return
+- About Arrow function
+```
+Arrow function bind 'this' automatically. But normal type function can't bind 'this' automatically.
+```
+
 ## 3.2 Component Life Cycle
+- component have life cycle, and dealt with by method
+- [react component](https://ko.reactjs.org/docs/react-component.html)
+- [react lifecycle methods diagram](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/)
+```js
+  constructor(props) {
+    super(props);
+    console.log("constructor");
+  }
+
+  componentDidMount() {
+    console.log("componentDidMount"); 
+  }
+
+  componentDidUpdate() {
+    console.log("componentDidUpdate");
+  }
+
+  componentWillUnmount() {
+    console.log("componentWillUnmount");
+  }
+```
+
 ## 3.3 Planning the Movie Component
+- state not a required
+```js
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ isLoading: false })
+    }, 2000);
+  }
+
+  render() {
+    const { isLoading } = this.state;
+    return <div>{isLoading ? "Loading..." : "We are ready"}</div>;
+  }
+```
 
 # 4 MAKING THE MOVIE APP
 ## 4.0 Fetching Movies from API
