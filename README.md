@@ -5,6 +5,7 @@
 # 0 INTRODUCTION
 ## 0.1 Requirements
 ```sh
+# Shell
 # node js
 node -v
 # npm 
@@ -19,11 +20,13 @@ git --version
 # 1 SETUP
 ## 1.0 Creating your first React App
 ```sh
+# Shell
 npx create-react-app nomad-react-app
 ```
 
 ## 1.1 Creating a Github Repository
 ```sh
+# Shell
 cd nomad-react-app
 git init 
 # github repo make 
@@ -102,6 +105,7 @@ export default App;
 - Declaration of use of props similar with HTML attribute 
 - To use props in child components, use {}
 ```js
+// App.js
 import React from 'react';
 
 function Food(props) {
@@ -130,7 +134,7 @@ export default App;
 ```
 
 ## 2.2 Dynamic Component Generation
-- Using JavaScript Array function - [map](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/maps)
+- Using JavaScript Array function - [map](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
 ```js
 function Food({ name, image }) {
   return (
@@ -231,13 +235,16 @@ class App extends React.Component {
 - that mean's react want to refresh when state changed -> notify using setState().
 ```js
   add = () => {
-    this.setState(keyword => ({ count: keyword.count+1, }));
+    //this.setState({count: this.state.count + 1 });
+    this.setState(keyword => ({ count: keyword.count + 1, }));
   }
 
   minus = () => {
-    this.setState(current => ({ count: current.count-1, }));
+    //this.setState({count: this.state.count - 1 });
+    this.setState(keyword => ({ count: keyword.count - 1, }));
   }
 ```
+- [reference](https://usecode.pw/functional-set-state-is-the-future-of-react/)
 - About implicit return
 - About Arrow function
 ```
@@ -268,7 +275,7 @@ Arrow function bind 'this' automatically. But normal type function can't bind 't
 ```
 
 ## 3.3 Planning the Movie Component
-- state not a required
+- state not a required!
 ```js
   componentDidMount() {
     setTimeout(() => {
@@ -279,12 +286,150 @@ Arrow function bind 'this' automatically. But normal type function can't bind 't
   render() {
     const { isLoading } = this.state;
     return <div>{isLoading ? "Loading..." : "We are ready"}</div>;
+    //return <div>{this.stat.isLoading ? "Loading..." : "We are ready"}</div>;
   }
 ```
 
 # 4 MAKING THE MOVIE APP
 ## 4.0 Fetching Movies from API
+- fetch : fetch data in javaScript 
+```js
+fetch() // like that ... but we use Axios
+```
+- [Axios](https://github.com/axios/axios) : like little layer on fetch 
+```sh
+# Shell
+npm i axios
+```
+- concept of [await, async](https://joshua1988.github.io/web-development/javascript/js-async-await/)
+- API-URL in class 
+  - https://yts-proxy.now.sh/list_movies.json
+  - https://yts-proxy.nomadcoders1.now.sh/list_movies.json
+- if you want(or have problem) to using another API-URL
+  - kofic sample: http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=f5eef3421c602c6cb7ea224104795888&targetDt=20120101
+  - ...
+- but you use another API-URL, you must consider data frame(prop-types ...)
+- i will test another API-URL, so separate URL from axios.get()
+```js
+import React from 'react';
+import axios from 'axios';
+
+// if your api_url have auth_key, also you can separate auth_key like below
+// if you want your auth_key, recommend to hide auth_key
+const auth_key = 'f5eef3421c602c6cb7ea224104795888'; // it is sample auth_key at kofic. 
+const today = '20210624';
+const api_url = `http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${auth_key}&targetDt=${today}`;
+// const api_url = 'https://yts-proxy.now.sh/list_movies.json'; // class api_url 1
+// const api_url = 'https://yts-proxy.nomadcoders1.now.sh/list_movies.json'; // class api_url 2
+
+class App extends React.Component {
+  state = {
+    isLoading: true,
+    movies: [],
+  }
+
+  getMovies = async () => { // getMovies is async function
+    // axios need time... so we wait until axios finished
+    const movies = await axios.get(api_url);
+  }
+
+  componentDidMount() {
+    this.getMovies();
+  }
+
+  render() {
+    const { isLoading } = this.state;
+    return <div>{isLoading ? "Loading..." : "We are ready"}</div>;
+    // return <div>{this.stat.isLoading ? "Loading..." : "We are ready"}</div>;
+  }
+}
+
+export default App;
+```
+
 ## 4.1 Rendering the Movies
+- match state with data(API)
+- change isLoading to true
+- rendering to new component Movie.js
+```js
+// App.js
+import React from 'react';
+import axios from 'axios';
+import Movie from './Movie';
+
+// if your api_url have auth_key, also you can separate auth_key like below
+// if you want your auth_key, recommend to hide auth_key
+const auth_key = 'f5eef3421c602c6cb7ea224104795888'; // it is sample auth_key at kofic. 
+const today = '20210624';
+const api_url = `http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${auth_key}&targetDt=${today}`;
+// const api_url = 'https://yts-proxy.now.sh/list_movies.json?sort_by=rating'; // class api_url 1
+// const api_url = 'https://yts-proxy.nomadcoders1.now.sh/list_movies.json?sort_by=rating'; // class api_url 2
+
+class App extends React.Component {
+  state = {
+    isLoading: true,
+    movies: [],
+  }
+
+  getMovies = async () => { // getMovies is async function
+    // axios need time... so we wait until axios finished
+    const { data: { boxOfficeResult: { dailyBoxOfficeList } } } = await axios.get(api_url);
+    // match state with data(API), and change isLoading to true
+    this.setState({ movies: dailyBoxOfficeList, isLoading: false });
+    // if using class api_url 1 or 2
+    // const { data: { data: { movies } } } = await axios.get(api_url);
+    // this.setState({ movies, isLoading: false });
+  }
+
+  componentDidMount() {
+    this.getMovies();
+  }
+
+  render() {
+    const { isLoading, movies } = this.state;
+    return (
+      <div>
+        {isLoading ? <h1>Loading...</h1> : movies.map(movie =>
+          <Movie key={movie.movieCd} id={movie.movieCd} year={movie.openDt} title={movie.movieNm} summary={movie.genreAlt} poster={movie.poster} />
+          // if using class api_url 1 or 2
+          // <Movie key={movie.id} id={movie.id} year={movie.year} title={movie.title} summary={movie.summary} poster={movie.medium_cover_image} />
+        )}
+      </div>
+    );
+  }
+}
+
+export default App;
+
+// Movie.js
+import React from 'react';
+import PropTypes from 'prop-types';
+
+function Movie({ id, year, title, summary, poster }) {
+  return (
+    <div className="Movie">
+      <h4>{title}</h4>
+    </div>
+  );
+}
+
+Movie.propTypes = {
+  id: PropTypes.string.isRequired,
+  year: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  summary: PropTypes.string,
+  poster: PropTypes.string,
+  // if using class api_url 1 or 2
+  // id: PropTypes.number.isRequired,
+  // year: PropTypes.number.isRequired,
+  // title: PropTypes.string.isRequired,
+  // summary: PropTypes.string.isRequired,
+  // poster: PropTypes.string.isRequired,
+}
+
+export default Movie;
+```
+
 ## 4.2 Styling the Movies
 ## 4.3 Adding Genres
 ## 4.4 Styles Timelapse
