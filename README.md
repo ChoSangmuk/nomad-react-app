@@ -309,18 +309,17 @@ npm i axios
   - kofic sample: http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=f5eef3421c602c6cb7ea224104795888&targetDt=20120101
   - ...
 - but you use another API-URL, you must consider data frame(prop-types ...)
-- i will test another API-URL, so separate URL from axios.get()
 ```js
 import React from 'react';
 import axios from 'axios';
 
 // if your api_url have auth_key, also you can separate auth_key like below
 // if you want your auth_key, recommend to hide auth_key
-const auth_key = 'f5eef3421c602c6cb7ea224104795888'; // it is sample auth_key at kofic. 
-const today = '20210624';
-const api_url = `http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${auth_key}&targetDt=${today}`;
+// const auth_key = 'f5eef3421c602c6cb7ea224104795888'; // it is sample auth_key at kofic. 
+// const today = '20210624';
+// const api_url = `http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${auth_key}&targetDt=${today}`;
 // const api_url = 'https://yts-proxy.now.sh/list_movies.json'; // class api_url 1
-// const api_url = 'https://yts-proxy.nomadcoders1.now.sh/list_movies.json'; // class api_url 2
+const api_url = 'https://yts-proxy.nomadcoders1.now.sh/list_movies.json'; // class api_url 2
 
 class App extends React.Component {
   state = {
@@ -359,11 +358,11 @@ import Movie from './Movie';
 
 // if your api_url have auth_key, also you can separate auth_key like below
 // if you want your auth_key, recommend to hide auth_key
-const auth_key = 'f5eef3421c602c6cb7ea224104795888'; // it is sample auth_key at kofic. 
-const today = '20210624';
-const api_url = `http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${auth_key}&targetDt=${today}`;
+// const auth_key = 'f5eef3421c602c6cb7ea224104795888'; // it is sample auth_key at kofic. 
+// const today = '20210624';
+// const api_url = `http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${auth_key}&targetDt=${today}`;
 // const api_url = 'https://yts-proxy.now.sh/list_movies.json?sort_by=rating'; // class api_url 1
-// const api_url = 'https://yts-proxy.nomadcoders1.now.sh/list_movies.json?sort_by=rating'; // class api_url 2
+const api_url = 'https://yts-proxy.nomadcoders1.now.sh/list_movies.json?sort_by=rating'; // class api_url 2
 
 class App extends React.Component {
   state = {
@@ -373,12 +372,12 @@ class App extends React.Component {
 
   getMovies = async () => { // getMovies is async function
     // axios need time... so we wait until axios finished
-    const { data: { boxOfficeResult: { dailyBoxOfficeList } } } = await axios.get(api_url);
+    // const { data: { boxOfficeResult: { dailyBoxOfficeList } } } = await axios.get(api_url);
     // match state with data(API), and change isLoading to true
-    this.setState({ movies: dailyBoxOfficeList, isLoading: false });
+    // this.setState({ movies: dailyBoxOfficeList, isLoading: false });
     // if using class api_url 1 or 2
-    // const { data: { data: { movies } } } = await axios.get(api_url);
-    // this.setState({ movies, isLoading: false });
+    const { data: { data: { movies } } } = await axios.get(api_url);
+    this.setState({ movies, isLoading: false });
   }
 
   componentDidMount() {
@@ -390,9 +389,9 @@ class App extends React.Component {
     return (
       <div>
         {isLoading ? <h1>Loading...</h1> : movies.map(movie =>
-          <Movie key={movie.movieCd} id={movie.movieCd} year={movie.openDt} title={movie.movieNm} summary={movie.genreAlt} poster={movie.poster} />
+          // <Movie key={movie.movieCd} id={movie.movieCd} year={movie.openDt} title={movie.movieNm} summary={movie.genreAlt} poster={movie.poster} />
           // if using class api_url 1 or 2
-          // <Movie key={movie.id} id={movie.id} year={movie.year} title={movie.title} summary={movie.summary} poster={movie.medium_cover_image} />
+          <Movie key={movie.id} id={movie.id} year={movie.year} title={movie.title} summary={movie.summary} poster={movie.medium_cover_image} />
         )}
       </div>
     );
@@ -414,23 +413,78 @@ function Movie({ id, year, title, summary, poster }) {
 }
 
 Movie.propTypes = {
-  id: PropTypes.string.isRequired,
-  year: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  summary: PropTypes.string,
-  poster: PropTypes.string,
-  // if using class api_url 1 or 2
-  // id: PropTypes.number.isRequired,
-  // year: PropTypes.number.isRequired,
+  // id: PropTypes.string.isRequired,
+  // year: PropTypes.string.isRequired,
   // title: PropTypes.string.isRequired,
-  // summary: PropTypes.string.isRequired,
-  // poster: PropTypes.string.isRequired,
+  // summary: PropTypes.string,
+  // poster: PropTypes.string,
+  // if using class api_url 1 or 2
+  id: PropTypes.number.isRequired,
+  year: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  summary: PropTypes.string.isRequired,
+  poster: PropTypes.string.isRequired,
 }
 
 export default Movie;
 ```
 
 ## 4.2 Styling the Movies
+- separate html tag for style
+- make App.css, Movie.css
+```js
+// App.js
+import React from 'react';
+import axios from 'axios';
+import Movie from './Movie';
+import "./App.css";
+
+// ...
+
+  render() {
+    const { isLoading, movies } = this.state;
+    return (
+      <section class="container">
+        {isLoading ? (
+          <div class="loader">
+            <span class="loader__text">Loading...</span>
+          </div>
+        ) : (
+          <div class="movies">
+            {movies.map(movie => (
+              <Movie key={movie.id} id={movie.id} year={movie.year} title={movie.title} summary={movie.summary} poster={movie.medium_cover_image} />
+            ))}
+          </div>
+        )
+        }
+      </section>
+    )
+  }
+}
+
+export default App;
+
+// Movie.js
+import React from 'react';
+import PropTypes from 'prop-types';
+import "./Movie.css";
+
+function Movie({ year, title, summary, poster }) {
+  return (
+    <div class="movie">
+      <img src={poster} alt={title} title={title} />
+      <div class="movie__data">
+        <h3 class="movie__title">{title}</h3>
+        <h5 class="movie__year">{year}</h5>
+        <p class="movie__summary">{summary}</p>
+      </div>
+    </div>
+  );
+}
+
+// ...
+```
+
 ## 4.3 Adding Genres
 ## 4.4 Styles Timelapse
 ## 4.5 Cutting the summary
