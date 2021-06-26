@@ -481,16 +481,101 @@ function Movie({ year, title, summary, poster }) {
     </div>
   );
 }
-
 // ...
 ```
 
 ## 4.3 Adding Genres
+- add Genres props
+```js
+// App.js
+<div className="movies">
+  {movies.map(movie => (
+    // <Movie key={movie.movieCd} id={movie.movieCd} year={movie.openDt} title={movie.movieNm} summary={movie.genreAlt} poster={movie.poster} />
+    // if using class api_url 1 or 2
+    <Movie
+      key={movie.id}
+      id={movie.id}
+      year={movie.year}
+      title={movie.title}
+      summary={movie.summary}
+      poster={movie.medium_cover_image}
+      genres={movie.genres} // genres
+    />
+  ))}
+</div>
+
+// Movie.js
+function Movie({ year, title, summary, poster, genres }) {
+  return (
+    <div className="movie">
+      <img src={poster} alt={title} title={title} />
+      <div className="movie__data">
+        <h3 className="movie__title">{title}</h3>
+        <h5 className="movie__year">{year}</h5>
+        <ul className="movie__genres">
+          {genres.map((genre, index) => (<li key={index} className="genres__genre"> {genre} </li>))}
+        </ul>
+        <p className="movie__summary">{summary}</p>
+      </div>
+    </div>
+  );
+}
+
+Movie.propTypes = {
+  // ...
+  genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+}
+```
+- about Warning : it can be confuse class component - html class, so use className in jsx
+```
+Warning: Invalid DOM property `class`. Did you mean `className`?
+```
+- similarly for -> htmlFor
+
 ## 4.4 Styles Timelapse
+- just copy css at [github](https://github.com/nomadcoders/movie_app_2019/commit/c0a3270f5824c2555e2621190c6307cbaefe0704) ... 
+
 ## 4.5 Cutting the summary
+- some case summary is too long.
+```js
+// Movie.js
+// <p className="movie__summary">{summary}</p> -> 
+<p className="movie__summary">{summary.slice(0, 180)} ...</p>
+```
 
 # 5 CONCLUSIONS
 ## 5.0 Deploying to Github Pages
+- install Github Pages package
+- Github pages usually using https://"Username".github.io/"projectName" 
+```sh
+# Shell
+npm i gh-pages 
+
+# Check Username, projectName
+git remote -v
+# origin  https://github.com/ChoSangmuk/nomad-react-app (fetch)
+# origin  https://github.com/ChoSangmuk/nomad-react-app (push)
+```
+- add homepage to package.json (is required) and modify scripts
+```json
+// package.json
+// homepage
+"homepage": "https://ChoSangmuk.github.io/nomad-react-app"
+
+// scripts
+"scripts": {
+  // ...
+  "eject": "react-scripts eject",
+  "predeploy":"npm run build",
+  "deploy":"gh-pages -d build"
+},
+```
+- let's deploy
+```sh
+# Shell
+npm run deploy
+```
+
 ## 5.1 Are we done?
 
 # 6 ROUTING BONUS
