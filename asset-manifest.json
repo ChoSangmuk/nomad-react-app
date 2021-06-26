@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/nomad-react-app/static/css/main.e2438b11.chunk.css",
+    "main.js": "/nomad-react-app/static/js/main.cb1214c1.chunk.js",
+    "main.js.map": "/nomad-react-app/static/js/main.cb1214c1.chunk.js.map",
+    "runtime-main.js": "/nomad-react-app/static/js/runtime-main.38d42953.js",
+    "runtime-main.js.map": "/nomad-react-app/static/js/runtime-main.38d42953.js.map",
+    "static/js/2.15720b14.chunk.js": "/nomad-react-app/static/js/2.15720b14.chunk.js",
+    "static/js/2.15720b14.chunk.js.map": "/nomad-react-app/static/js/2.15720b14.chunk.js.map",
+    "index.html": "/nomad-react-app/index.html",
+    "static/css/main.e2438b11.chunk.css.map": "/nomad-react-app/static/css/main.e2438b11.chunk.css.map",
+    "static/js/2.15720b14.chunk.js.LICENSE.txt": "/nomad-react-app/static/js/2.15720b14.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.38d42953.js",
+    "static/js/2.15720b14.chunk.js",
+    "static/css/main.e2438b11.chunk.css",
+    "static/js/main.cb1214c1.chunk.js"
+  ]
+}
