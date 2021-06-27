@@ -85,7 +85,7 @@ export default Potato; // default export Potato function
 - How to using Component? in App.js
 ```js
 import React from 'react';
-import Potato from './Potato'; //import Potato Component
+import Potato from './Potato'; // import Potato Component
 
 function App() {
   return (
@@ -235,12 +235,12 @@ class App extends React.Component {
 - that mean's react want to refresh when state changed -> notify using setState().
 ```js
   add = () => {
-    //this.setState({count: this.state.count + 1 });
+    // this.setState({count: this.state.count + 1 });
     this.setState(keyword => ({ count: keyword.count + 1, }));
   }
 
   minus = () => {
-    //this.setState({count: this.state.count - 1 });
+    // this.setState({count: this.state.count - 1 });
     this.setState(keyword => ({ count: keyword.count - 1, }));
   }
 ```
@@ -286,7 +286,7 @@ Arrow function bind 'this' automatically. But normal type function can't bind 't
   render() {
     const { isLoading } = this.state;
     return <div>{isLoading ? "Loading..." : "We are ready"}</div>;
-    //return <div>{this.stat.isLoading ? "Loading..." : "We are ready"}</div>;
+    // return <div>{this.stat.isLoading ? "Loading..." : "We are ready"}</div>;
   }
 ```
 
@@ -604,8 +604,51 @@ npm install --save react-router-dom
 - clear App.js, make function component
 
 ## 6.1 Building the Router
+- Router take URL, check command, return correct component.
+- react-router-dom have some kind of router. HashRouter, BrowserRouter ...
+- Route needs path and component
+- react-router-dom render similar path all! -> so use exact path="" or exact={true}
+```js
+// App.js
+import React from "react";
+import { HashRouter, Route } from "react-router-dom";
+import About from "./routes/About";
+import Home from "./routes/Home";
 
+function App(params) {
+  return (
+    <HashRouter>
+      <Route exact path="/" component={Home} />
+      <Route path="/about" exact={true} component={About} />
+    </HashRouter>
+  );
+}
+
+export default App;
+```
 
 ## 6.2 Building the Navigation
+- make Navigation component
+- if using href (a tag) maybe refresh app -> so, have to using Link (in react router dom)
+- Link can't be used outside of the router
+- It's difficult to use BrowserRouter in gitHub pages, so use HashRouter
+```js
+// Navigation.js
+import React from "react";
+import { Link } from "react-router-dom";
+import "./Navigation.css";
+
+function Navigation(params) {
+  return <div>
+    {/* <a href="/">Home</a>
+    <a href="/about">About</a> */}
+    <Link to="/">Home</Link>
+    <Link to="/about">About</Link>
+  </div>
+}
+
+export default Navigation;
+```
+
 ## 6.3 Sharing Props Between Routes
 ## 6.4 Redirecting
