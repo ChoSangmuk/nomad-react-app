@@ -560,7 +560,7 @@ git remote -v
 ```json
 // package.json
 // homepage
-"homepage": "https://ChoSangmuk.github.io/nomad-react-app"
+"homepage": "https://chosangmuk.github.io/nomad-react-app"
 
 // scripts
 "scripts": {
@@ -573,14 +573,39 @@ git remote -v
 - let's deploy
 ```sh
 # Shell
+# config git 
+git config --global user.email "tkdanr612@gmail.com"
+git config --global user.name "ChoSangmuk"
+
+# deploy
 npm run deploy
+# ChoSangmuk/pw
 ```
 
 ## 5.1 Are we done?
+- react hook is new thing, not a replacements
+- if using react hook, can use state in function components
+- react native can make mobile app 
 
 # 6 ROUTING BONUS
 ## 6.0 Getting Ready for the Router
+- using [react router dom](https://reactrouter.com/web/guides/quick-start)
+- App.js be a route, Home.js be a main page
+```sh
+# Shell
+npm install --save react-router-dom
+```
+- make src/components
+  - move Movie.js, Movie.css to src/components
+- make src/routes
+  - copy src/App.js to src/routes/Home.js
+  - move App.css to src/routes/Home.css
+  - make src/routes/About.js
+- clear App.js, make function component
+
 ## 6.1 Building the Router
+
+
 ## 6.2 Building the Navigation
 ## 6.3 Sharing Props Between Routes
 ## 6.4 Redirecting
