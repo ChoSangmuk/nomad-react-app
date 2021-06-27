@@ -639,16 +639,83 @@ import { Link } from "react-router-dom";
 import "./Navigation.css";
 
 function Navigation(params) {
-  return <div>
-    {/* <a href="/">Home</a>
-    <a href="/about">About</a> */}
-    <Link to="/">Home</Link>
-    <Link to="/about">About</Link>
-  </div>
+  return (
+    <div className="nav">
+      {/* <a href="/">Home</a>
+      <a href="/about">About</a> */}
+      <Link to="/">Home</Link>
+      <Link to="/about">About</Link>
+    </div>
+  );
 }
 
 export default Navigation;
 ```
 
 ## 6.3 Sharing Props Between Routes
+- concept of route Props
+- route in router has some default props (history, location, ... )
+- react-router-dom can change "to" (Link tag) as Object for clarify : [reference](https://reactrouter.com/web/api/Link)
+```js
+// App.js 
+// import something ... 
+import Detail from "./routes/Detail";
+// ...
+function App(params) {
+  return (
+    <HashRouter>
+      <Navigation />
+      <Route exact path="/" component={Home} />
+      <Route path="/about" exact={true} component={About} />
+      <Route path="/movie-detail" exact={true} component={Detail} />
+    </HashRouter>
+  );
+}
+
+// Movie.js
+// import something ... 
+import { Link } from "react-router-dom";
+// ...
+function Movie({ year, title, summary, poster, genres }) {
+  return (
+    <Link to={{ pathname: "/movie-detail", state: { year, title, summary, poster, genres } }}>
+      <div className="movie">
+        {/* className="movie" */}
+      </div>
+    </Link>
+  );
+}
+
+// Detail.js
+import React from "react";
+
+function Detail(props) {
+  console.log(props);
+  return <div></div>
+}
+
+export default Detail;
+```
+
 ## 6.4 Redirecting
+- if user enter illegal url, Redirecte Home 
+- check location, using history
+```js
+// Detail.js
+import React from "react";
+
+class Detail extends React.Component {
+  componentDidMount() {
+    const { location, history } = this.props;
+    if (location.state === undefined) history.push("/");
+  }
+
+  render() {
+    const { location } = this.props;
+    if (location.state === undefined) return null;
+    else return <div>{location.state.title}</div>
+  }
+}
+
+export default Detail;
+```
